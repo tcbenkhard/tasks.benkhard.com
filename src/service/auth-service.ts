@@ -1,16 +1,21 @@
 import {RegistrationRequest} from "../model/registration-request";
 import {DocumentClient} from "aws-sdk/clients/dynamodb";
 import {get_variable} from "../util/env";
-import {genSaltSync, hashSync} from "bcrypt-ts";
-import {ApiError, ErrorCode} from "../util/exception";
+import {compareSync, genSaltSync, hashSync} from "bcrypt-ts";
+import {ApiError, ErrorCode, InvalidCredentialsError} from "../util/exception";
+import {LoginRequest} from "../model/login-request";
+import * as jwt from 'jsonwebtoken'
+import {JwtResponse} from "../model/jwt-response";
 
 export class AuthService {
 
     private dynamo: DocumentClient
+    private signingKey: string
     private USER_TABLE_NAME = get_variable('USER_TABLE_NAME')
 
-    constructor(dynamo: DocumentClient) {
+    constructor(dynamo: DocumentClient, signingKey: string) {
         this.dynamo = dynamo
+        this.signingKey = signingKey
     }
 
     register = async (registrationRequest: RegistrationRequest) => {
@@ -34,6 +39,35 @@ export class AuthService {
                     ErrorCode.USER_ALREADY_EXISTS
                 )
             }
+        }
+    }
+
+    login = async (loginRequest: LoginRequest): Promise<JwtResponse> =>  {
+        const getResult = await this.dynamo.get({
+            TableName: this.USER_TABLE_NAME,
+            Key: {
+                'email': loginRequest.email
+            }
+        }).promise()
+
+        if(getResult.Item == undefined)
+            throw new InvalidCredentialsError()
+        if(!compareSync(loginRequest.password, getResult.Item.password))
+            throw new InvalidCredentialsError()
+
+        const accessToken = jwt.sign({}, this.signingKey, {
+            expiresIn: '1 day',
+            subject: loginRequest.email,
+        })
+
+        const refreshToken = jwt.sign({}, this.signingKey, {
+            expiresIn: '3 months',
+            subject: loginRequest.email,
+        })
+
+        return {
+            accessToken: accessToken,
+            refreshToken: refreshToken
         }
     }
 }

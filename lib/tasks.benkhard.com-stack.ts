@@ -32,6 +32,15 @@ export class TasksBenkhardComStack extends cdk.Stack {
     })
     userTable.grantReadWriteData(registrationHandler)
 
+    const loginHandler = new NodejsFunction(this, 'LoginHandler', {
+      handler: 'handler',
+      entry: 'src/login-handler.ts',
+      functionName: `${this.serviceName}-login`,
+      environment,
+      memorySize: 512
+    })
+    userTable.grantReadData(registrationHandler)
+
     const gateway = new aws_apigateway.RestApi(this, `TasksApi`, {
       restApiName: this.serviceName,
       defaultCorsPreflightOptions: {
@@ -45,5 +54,8 @@ export class TasksBenkhardComStack extends cdk.Stack {
 
     const registerResource = gateway.root.addResource('register')
     registerResource.addMethod('POST', new LambdaIntegration(registrationHandler))
+
+    const loginResource = gateway.root.addResource('login')
+    loginResource.addMethod('POST', new LambdaIntegration(loginHandler))
   }
 }

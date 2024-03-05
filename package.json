@@ -15,18 +15,20 @@
     "@types/aws-lambda": "^8.10.134",
     "@types/jest": "^29.5.12",
     "@types/node": "20.11.16",
-    "esbuild": "^0.20.0",
     "aws-cdk": "2.128.0",
+    "aws-cdk-lib": "2.128.0",
     "aws-sdk": "^2.1570.0",
+    "esbuild": "^0.20.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "typescript": "~5.3.3",
-    "aws-cdk-lib": "2.128.0"
+    "typescript": "~5.3.3"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
     "bcrypt-ts": "^5.0.2",
     "constructs": "^10.0.0",
+    "jsonwebtoken": "^9.0.2",
     "source-map-support": "^0.5.21",
     "zod": "^3.22.4"
   }

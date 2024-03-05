@@ -1,6 +1,7 @@
 export enum ErrorCode {
     BAD_REQUEST,
-    USER_ALREADY_EXISTS
+    USER_ALREADY_EXISTS,
+    INVALID_CREDENTIALS
 }
 
 export class ApiError extends Error {
@@ -13,5 +14,11 @@ export class ApiError extends Error {
         this.statusCode = statusCode
         this.reason = reason
         this.errorCode = ErrorCode[errorCode]
+    }
+}
+
+export class InvalidCredentialsError extends ApiError {
+    constructor() {
+        super(401, 'Invalid username or password.', ErrorCode.INVALID_CREDENTIALS);
     }
 }

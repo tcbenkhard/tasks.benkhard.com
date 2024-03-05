@@ -5,7 +5,7 @@ import {RegistrationRequestSchema} from "./model/registration-request";
 import {parseBody} from "./util/validate";
 import {DocumentClient} from "aws-sdk/clients/dynamodb";
 
-const authService = new AuthService(new DocumentClient())
+const authService = new AuthService(new DocumentClient(), 'RandomSigningKeyThatIsNotRealAtAll')
 
 export const handler = wrap_handler(async (event: APIGatewayProxyEvent, context: Context) => {
     const registrationRequest = parseBody(event.body, RegistrationRequestSchema)

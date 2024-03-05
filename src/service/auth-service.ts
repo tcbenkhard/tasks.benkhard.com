@@ -55,12 +55,16 @@ export class AuthService {
         if(!compareSync(loginRequest.password, getResult.Item.password))
             throw new InvalidCredentialsError()
 
-        const accessToken = jwt.sign({}, this.signingKey, {
+        const accessToken = jwt.sign({
+            type: 'access'
+        }, this.signingKey, {
             expiresIn: '1d',
             subject: loginRequest.email,
         })
 
-        const refreshToken = jwt.sign({}, this.signingKey, {
+        const refreshToken = jwt.sign({
+            type: 'refresh'
+        }, this.signingKey, {
             expiresIn: '90d',
             subject: loginRequest.email,
         })

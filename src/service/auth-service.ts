@@ -56,12 +56,12 @@ export class AuthService {
             throw new InvalidCredentialsError()
 
         const accessToken = jwt.sign({}, this.signingKey, {
-            expiresIn: '1 day',
+            expiresIn: '1d',
             subject: loginRequest.email,
         })
 
         const refreshToken = jwt.sign({}, this.signingKey, {
-            expiresIn: '3 months',
+            expiresIn: '90d',
             subject: loginRequest.email,
         })
 

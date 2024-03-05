@@ -49,7 +49,7 @@ export class TaskService {
                 childId: `user#${request.owner}`,
                 createdAt: currentDate
             }
-        })
+        }).promise()
         await this.dynamo.put({
             TableName: this.TASK_TABLE_NAME,
             Item: {
@@ -57,7 +57,7 @@ export class TaskService {
                 childId: `list#${listId}`,
                 createdAt: currentDate
             }
-        })
+        }).promise()
 
         return {
             id: listId,

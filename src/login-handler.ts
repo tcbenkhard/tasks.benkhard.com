@@ -9,11 +9,11 @@ const authService = new AuthService(new DocumentClient(), 'RandomSigningKeyThatI
 const decode = (str: string):string => Buffer.from(str, 'base64').toString('binary');
 
 export const handler = wrap_handler(async (event: APIGatewayProxyEvent, context: Context) => {
-    const authHeader = event.headers?.Authorization
-    if(!authService) {
+    const authHeader = event.headers['Authorization']
+    if(!authHeader) {
         throw new InvalidCredentialsError()
     }
-    const decodedHeader = decode(authHeader!.substring('Basic '.length));
+    const decodedHeader = decode(authHeader.substring('Basic '.length));
     const headerValues = decodedHeader.split(':');
     return await authService.login({
         email: headerValues[0],

@@ -1,0 +1,9 @@
+### Registration request
+POST https://{{baseUrl}}/prod/register
+Content-Type: application/json
+
+{
+    "email": "tcbenkhard@gmail.com",
+    "password": "DitIsEenTest",
+    "name": "Timo Benkhard"
+}

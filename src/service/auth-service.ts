@@ -25,7 +25,7 @@ export class AuthService {
                     password: hash
                 },
                 ConditionExpression: 'attribute_not_exists(email)'
-            })
+            }).promise()
         } catch (e: any) {
             if(e.name === 'ConditionalCheckFailedException') {
                 throw new ApiError(

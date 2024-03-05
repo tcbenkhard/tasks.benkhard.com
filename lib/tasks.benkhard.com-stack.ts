@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import {aws_dynamodb, aws_apigateway} from "aws-cdk-lib";
+import {aws_apigateway, aws_dynamodb} from 'aws-cdk-lib';
+import {Construct} from 'constructs';
 import {AttributeType} from "aws-cdk-lib/aws-dynamodb";
 import {NodejsFunction} from "aws-cdk-lib/aws-lambda-nodejs";
 import {EndpointType, LambdaIntegration} from "aws-cdk-lib/aws-apigateway";
@@ -19,8 +19,21 @@ export class TasksBenkhardComStack extends cdk.Stack {
       }
     })
 
+    const taskTable = new aws_dynamodb.Table(this, `TasksTable`, {
+      tableName: `${this.serviceName}-tasks`,
+      partitionKey: {
+        type: AttributeType.STRING,
+        name: 'parentId'
+      },
+      sortKey: {
+        type: AttributeType.STRING,
+        name: 'childId'
+      }
+    })
+
     const environment = {
-      USER_TABLE_NAME: userTable.tableName
+      USER_TABLE_NAME: userTable.tableName,
+      TASK_TABLE_NAME: taskTable.tableName
     }
 
     const registrationHandler = new NodejsFunction(this, 'RegistrationHandler', {
@@ -41,6 +54,15 @@ export class TasksBenkhardComStack extends cdk.Stack {
     })
     userTable.grantReadData(loginHandler)
 
+    const createListHandler = new NodejsFunction(this, 'CreateListHandler', {
+      handler: 'handler',
+      entry: 'src/create-list-handler.ts',
+      functionName: `${this.serviceName}-create-list`,
+      environment,
+      memorySize: 512
+    })
+    taskTable.grantReadWriteData(createListHandler)
+
     const gateway = new aws_apigateway.RestApi(this, `TasksApi`, {
       restApiName: this.serviceName,
       defaultCorsPreflightOptions: {
@@ -57,5 +79,8 @@ export class TasksBenkhardComStack extends cdk.Stack {
 
     const loginResource = gateway.root.addResource('login')
     loginResource.addMethod('POST', new LambdaIntegration(loginHandler))
+
+    const taskResource = gateway.root.addResource('tasks')
+    taskResource.addMethod('POST', new LambdaIntegration(createListHandler))
   }
 }

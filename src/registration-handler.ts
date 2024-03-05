@@ -1,7 +1,7 @@
 import {AuthService} from "./service/auth-service";
 import {APIGatewayProxyEvent, Context} from "aws-lambda";
 import {wrap_handler} from "./util/base-handler";
-import {RegistrationRequestSchema} from "./model/registration-request";
+import {RegistrationRequestSchema} from "./model/requests/registration-request";
 import {parseBody} from "./util/validate";
 import {DocumentClient} from "aws-sdk/clients/dynamodb";
 

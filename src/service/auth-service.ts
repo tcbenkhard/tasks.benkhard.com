@@ -1,11 +1,11 @@
-import {RegistrationRequest} from "../model/registration-request";
+import {RegistrationRequest} from "../model/requests/registration-request";
 import {DocumentClient} from "aws-sdk/clients/dynamodb";
 import {get_variable} from "../util/env";
 import {compareSync, genSaltSync, hashSync} from "bcrypt-ts";
 import {ApiError, ErrorCode, InvalidCredentialsError} from "../util/exception";
-import {LoginRequest} from "../model/login-request";
+import {LoginRequest} from "../model/requests/login-request";
 import * as jwt from 'jsonwebtoken'
-import {JwtResponse} from "../model/jwt-response";
+import {JwtResponse} from "../model/response/jwt-response";
 
 export class AuthService {
 
@@ -73,5 +73,22 @@ export class AuthService {
             accessToken: accessToken,
             refreshToken: refreshToken
         }
+    }
+
+    verifyAuthorizationHeader = (header: string | undefined) => {
+        if(!header) throw new InvalidCredentialsError()
+        const token = header.substring('Bearer '.length)
+        return this.verifyToken(token)
+    }
+
+    private verifyToken = (token: string) => {
+        let payload: TokenPayload | undefined = undefined
+        try {
+            payload = jwt.verify(token, this.signingKey, {}) as TokenPayload
+        } catch (e) {
+            throw new InvalidCredentialsError()
+        }
+        if(payload.type !== 'access') throw new InvalidCredentialsError()
+        return payload
     }
 }

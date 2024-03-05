@@ -3,7 +3,7 @@ import {RegistrationRequest, RegistrationRequestSchema} from "../model/registrat
 import {ApiError, ErrorCode} from "./exception";
 
 
-export const parseBody = <Type>(data: string, schema: ZodSchema<Type>): Type => {
+export const parseBody = <Type>(data: string | null, schema: ZodSchema<Type>): Type => {
     if(data === null) {
         throw new ApiError(400, 'Missing requestbody', ErrorCode.BAD_REQUEST)
     }

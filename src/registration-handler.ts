@@ -7,7 +7,7 @@ import {DocumentClient} from "aws-sdk/clients/dynamodb";
 
 const authService = new AuthService(new DocumentClient())
 
-const handler = wrap_handler(async (event: APIGatewayProxyEvent, context: Context) => {
+export const handler = wrap_handler(async (event: APIGatewayProxyEvent, context: Context) => {
     const registrationRequest = parseBody(event.body, RegistrationRequestSchema)
     await authService.register(registrationRequest)
 }, 201)

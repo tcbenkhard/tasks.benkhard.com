@@ -33,7 +33,7 @@ export class TaskService {
             TableName: this.TASK_TABLE_NAME,
             KeyConditionExpression: '#parentId = :userId and begins_with(#childId, :listPrefix)',
             ExpressionAttributeValues: {
-                ":userId": request.owner,
+                ":userId": `user#${request.owner}`,
                 ":listPrefix": "list#"
             },
             ExpressionAttributeNames: {

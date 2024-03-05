@@ -52,7 +52,13 @@ export class TaskService {
         const allLists = await this.dynamo.batchGet({
             RequestItems: requestItems
         }).promise()
-        return allLists.Responses as any as Array<ListResponse>
+        if(!allLists.Responses) return []
+        return allLists.Responses[this.TASK_TABLE_NAME].map(item => ({
+            id: item.parentId,
+            title: item.title,
+            owner: item.owner,
+            createdAt: item.createdAt
+        }))
     }
     createList = async (request: CreateListRequest): Promise<ListResponse> => {
         const listId = randomUUID({})

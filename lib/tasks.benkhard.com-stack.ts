@@ -39,7 +39,7 @@ export class TasksBenkhardComStack extends cdk.Stack {
       environment,
       memorySize: 512
     })
-    userTable.grantReadData(registrationHandler)
+    userTable.grantReadData(loginHandler)
 
     const gateway = new aws_apigateway.RestApi(this, `TasksApi`, {
       restApiName: this.serviceName,

@@ -1,9 +1,10 @@
 import {CreateListRequest} from "../model/requests/create-list-request";
-import {DocumentClient} from "aws-sdk/clients/dynamodb";
+import {BatchGetRequestMap, DocumentClient} from "aws-sdk/clients/dynamodb";
 import {DynamoDB} from 'aws-sdk'
 import {get_variable} from "../util/env";
 import {randomUUID} from "crypto";
-import {CreateListResponse} from "../model/response/create-list-response";
+import {ListResponse} from "../model/response/list-response";
+import {GetListsRequest} from "../model/requests/get-lists-request";
 
 export class TaskService {
     /**
@@ -27,7 +28,32 @@ export class TaskService {
         this.dynamo = dynamo
     }
 
-    createList = async (request: CreateListRequest): Promise<CreateListResponse> => {
+    getAllLists = async (request: GetListsRequest): Promise<Array<ListResponse>> =>  {
+        const membershipsResponse = await this.dynamo.query({
+            TableName: this.TASK_TABLE_NAME,
+            KeyConditionExpression: '#parentId = :userId and begins_with(#childId, :listPrefix)',
+            ExpressionAttributeValues: {
+                ":userId": request.owner,
+                ":listPrefix": "list#"
+            },
+            ExpressionAttributeNames: {
+                "#parentId": "parentId",
+                "#childId": "childId"
+            }
+        }).promise()
+        if(!membershipsResponse.Items) return []
+
+        const keys = membershipsResponse.Items.map(item => ({parentId: item.childId, childId: item.childId}))
+        const requestItems: BatchGetRequestMap = {}
+        requestItems[this.TASK_TABLE_NAME] = {
+            Keys: keys
+        }
+        const allLists = await this.dynamo.batchGet({
+            RequestItems: requestItems
+        }).promise()
+        return allLists.Responses as any as Array<ListResponse>
+    }
+    createList = async (request: CreateListRequest): Promise<ListResponse> => {
         const listId = randomUUID({})
         const currentDate = new Date().toISOString()
 

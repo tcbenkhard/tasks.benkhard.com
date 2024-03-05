@@ -1,4 +1,4 @@
-export interface CreateListResponse {
+export interface ListResponse {
     id: string,
     title: string,
     createdAt: string,

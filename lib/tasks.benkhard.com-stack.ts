@@ -63,6 +63,15 @@ export class TasksBenkhardComStack extends cdk.Stack {
     })
     taskTable.grantReadWriteData(createListHandler)
 
+    const getListsHandler = new NodejsFunction(this, 'GetListsHander', {
+      handler: 'handler',
+      entry: 'src/get-lists-handler.ts',
+      functionName: `${this.serviceName}-get-lists`,
+      environment,
+      memorySize: 512
+    })
+    taskTable.grantReadData(getListsHandler)
+
     const gateway = new aws_apigateway.RestApi(this, `TasksApi`, {
       restApiName: this.serviceName,
       defaultCorsPreflightOptions: {
@@ -80,7 +89,8 @@ export class TasksBenkhardComStack extends cdk.Stack {
     const loginResource = gateway.root.addResource('login')
     loginResource.addMethod('POST', new LambdaIntegration(loginHandler))
 
-    const taskResource = gateway.root.addResource('tasks')
+    const taskResource = gateway.root.addResource('lists')
     taskResource.addMethod('POST', new LambdaIntegration(createListHandler))
+    taskResource.addMethod('GET', new LambdaIntegration(getListsHandler))
   }
 }

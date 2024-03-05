@@ -7,3 +7,13 @@ Content-Type: application/json
     "password": "DitIsEenTest",
     "name": "Timo Benkhard"
 }
+
+### Login request
+POST https://{{baseUrl}}/prod/login
+Content-Type: application/json
+Authorization: Basic tcbenkhard@gmail.com DitIsEenTest
+
+### Invalid Login request
+POST https://{{baseUrl}}/prod/login
+Content-Type: application/json
+Authorization: Basic tcbenkhard@gmail.com DitIsFout

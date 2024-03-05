@@ -19,10 +19,15 @@ Content-Type: application/json
 Authorization: Basic tcbenkhard@gmail.com DitIsFout
 
 ### Maak een lijst
-POST https://{{baseUrl}}/prod/tasks
+POST https://{{baseUrl}}/prod/lists
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5NjQ2NjI2LCJleHAiOjE3MDk3MzMwMjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.ugEvhXD_S2SWbj0ReHLG1-o6rNRyvLldcwW-Xe9mgBs
 
 {
   "title": "Test lijst"
 }
+
+### Get my lists
+GET https://{{baseUrl}}/prod/lists
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5NjQ2NjI2LCJleHAiOjE3MDk3MzMwMjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.ugEvhXD_S2SWbj0ReHLG1-o6rNRyvLldcwW-Xe9mgBs

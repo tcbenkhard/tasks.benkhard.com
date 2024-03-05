@@ -41,7 +41,8 @@ export class TaskService {
                 "#childId": "childId"
             }
         }).promise()
-        if(!membershipsResponse.Items) return []
+        console.log(`Memberships found: ${membershipsResponse.Items}`)
+        if(!membershipsResponse.Items || membershipsResponse.Items.length < 1) return []
 
         const keys = membershipsResponse.Items.map(item => ({parentId: item.childId, childId: item.childId}))
         const requestItems: BatchGetRequestMap = {}

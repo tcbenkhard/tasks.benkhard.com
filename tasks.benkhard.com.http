@@ -34,4 +34,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzI
 
 
 ### Create a task in a list
-POST https://{{baseUrl}}/prod/lists/
+POST https://{{baseUrl}}/prod/lists/1371cc81-82cb-44b9-a198-e533a6b61a0e/tasks
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5ODIwMTY2LCJleHAiOjE3MDk5MDY1NjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.Jz4mrlpr7dwURKWlHq6inwjUBayCn2z4Nt-VpRheQhg
+
+{
+  "title": "My First Task",
+  "description": "This is my very first task",
+  "priority": 4,
+  "type": "FLEXIBLE",
+  "schedule": {
+    "interval": 2,
+    "period": "weeks"
+  },
+  "startAt": "2024-03-07T12:00:00.000Z"
+}

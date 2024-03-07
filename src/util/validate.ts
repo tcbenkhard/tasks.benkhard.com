@@ -11,6 +11,7 @@ export const parseBody = <Type>(data: string | null, schema: ZodSchema<Type>, ex
         const jsonData = JSON.parse(data)
         return schema.parse({...jsonData, ...extras})
     } catch (e) {
+        console.log(e)
         throw new ApiError(400, 'Request does not match schema', ErrorCode.BAD_REQUEST)
     }
 }

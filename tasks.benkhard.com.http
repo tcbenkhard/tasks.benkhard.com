@@ -39,8 +39,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5ODIwMTY2LCJleHAiOjE3MDk5MDY1NjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.Jz4mrlpr7dwURKWlHq6inwjUBayCn2z4Nt-VpRheQhg
 
 {
-  "title": "My First Task",
-  "description": "This is my very first task",
+  "title": "My Second Task",
+  "description": "This is my very second task",
   "priority": 4,
   "type": "flexible",
   "schedule": {

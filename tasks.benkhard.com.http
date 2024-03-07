@@ -39,13 +39,13 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5ODIwMTY2LCJleHAiOjE3MDk5MDY1NjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.Jz4mrlpr7dwURKWlHq6inwjUBayCn2z4Nt-VpRheQhg
 
 {
-  "title": "My Second Task",
-  "description": "This is my very second task",
+  "title": "My fourth Task",
+  "description": "This is my very fourth task",
   "priority": 4,
   "type": "flexible",
   "schedule": {
     "interval": 2,
     "period": "weeks"
   },
-  "startAt": "2024-03-07T12:00:00.000Z"
+  "startAt": "2024-03-07"
 }

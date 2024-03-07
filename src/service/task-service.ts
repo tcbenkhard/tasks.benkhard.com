@@ -1,10 +1,14 @@
 import {CreateListRequest} from "../model/requests/create-list-request";
-import {BatchGetRequestMap, DocumentClient} from "aws-sdk/clients/dynamodb";
-import {DynamoDB} from 'aws-sdk'
-import {get_variable} from "../util/env";
 import {randomUUID} from "crypto";
 import {ListResponse} from "../model/response/list-response";
 import {GetListsRequest} from "../model/requests/get-lists-request";
+import {CreateTaskRequest} from "../model/requests/create-task-request";
+import {CreateTaskResponse} from "../model/response/create-task-response";
+import {DateTime, Duration} from 'luxon'
+import {TaskDTO, TaskSchedule} from "../model/dto/task";
+import {TaskTableClient} from "../client/task-table-client";
+import {ListNotFoundError, UnauthorizedError} from "../util/exception";
+import {GetListRequest} from "../model/requests/get-list-request";
 
 export class TaskService {
     /**
@@ -22,81 +26,95 @@ export class TaskService {
      *      QUERY list#<listId>, begins_with(task#)
      */
 
-    private dynamo: DocumentClient
-    private TASK_TABLE_NAME = get_variable('TASK_TABLE_NAME')
-    constructor(dynamo: DocumentClient) {
-        this.dynamo = dynamo
+    private taskClient: TaskTableClient
+    constructor(taskClient: TaskTableClient) {
+        this.taskClient = taskClient
     }
 
-    getAllLists = async (request: GetListsRequest): Promise<Array<ListResponse>> =>  {
-        const membershipsResponse = await this.dynamo.query({
-            TableName: this.TASK_TABLE_NAME,
-            KeyConditionExpression: '#parentId = :userId and begins_with(#childId, :listPrefix)',
-            ExpressionAttributeValues: {
-                ":userId": `user#${request.owner}`,
-                ":listPrefix": "list#"
-            },
-            ExpressionAttributeNames: {
-                "#parentId": "parentId",
-                "#childId": "childId"
-            }
-        }).promise()
-        console.log(`Memberships found: ${membershipsResponse.Items}`)
-        if(!membershipsResponse.Items || membershipsResponse.Items.length < 1) return []
+    assertUserIsMember = async (userId: string, listId: string) => {
+        const membership = await this.taskClient.getUserListMembership(userId, listId)
+        if(!membership) throw new UnauthorizedError()
+    }
 
-        const keys = membershipsResponse.Items.map(item => ({parentId: item.childId, childId: item.childId}))
-        const requestItems: BatchGetRequestMap = {}
-        requestItems[this.TASK_TABLE_NAME] = {
-            Keys: keys
-        }
-        const allLists = await this.dynamo.batchGet({
-            RequestItems: requestItems
-        }).promise()
-        if(!allLists.Responses) return []
-        return allLists.Responses[this.TASK_TABLE_NAME].map(item => ({
-            id: item.parentId,
-            title: item.title,
-            owner: item.owner,
-            createdAt: item.createdAt
-        }))
+    getListsForUser = async (request: GetListsRequest): Promise<Array<ListResponse>> =>  {
+        const userMemberships = await this.taskClient.getMembershipsForUser(request.owner)
+        const userLists = await this.taskClient.getListsFromMemberships(userMemberships)
+
+        return userLists
     }
     createList = async (request: CreateListRequest): Promise<ListResponse> => {
-        const listId = randomUUID({})
-        const currentDate = new Date().toISOString()
+        const currentDate = DateTime.now()
+        const listDto = await this.taskClient.createList({
+            createdAt: currentDate.toISODate(),
+            owner: request.owner,
+            title: request.title,
+            id: randomUUID()
+        })
 
-        await this.dynamo.put({
-            TableName: this.TASK_TABLE_NAME,
-            Item: {
-                parentId: `list#${listId}`,
-                childId: `list#${listId}`,
-                title: request.title,
-                owner: request.owner,
-                createdAt: currentDate
-            },
-            ConditionExpression: 'attribute_not_exists(id)'
-        }).promise()
-        await this.dynamo.put({
-            TableName: this.TASK_TABLE_NAME,
-            Item: {
-                parentId: `list#${listId}`,
-                childId: `user#${request.owner}`,
-                createdAt: currentDate
-            }
-        }).promise()
-        await this.dynamo.put({
-            TableName: this.TASK_TABLE_NAME,
-            Item: {
-                parentId: `user#${request.owner}`,
-                childId: `list#${listId}`,
-                createdAt: currentDate
-            }
-        }).promise()
+        await Promise.all([
+            this.taskClient.createListMembership(listDto.id, request.owner),
+            this.taskClient.createUserMembership(request.owner, listDto.id)
+        ])
 
         return {
-            id: listId,
+            id: listDto.id,
+            title: listDto.title,
+            owner: listDto.owner,
+            createdAt: listDto.createdAt
+        }
+    }
+
+    getList = async (request: GetListRequest): Promise<ListDTO> => {
+        await this.assertUserIsMember(request.userId, request.listId)
+
+        const list = await this.taskClient.getList(request.listId)
+        if(list === null) throw new ListNotFoundError(request.listId)
+        return list
+    }
+
+    calculateScore = (task: TaskDTO) => {
+        const daysSinceLastCompleted = DateTime.now().diff(DateTime.fromISO(task.lastCompleted)).days
+        const totalDuration = DateTime.fromISO(task.lastCompleted).diff(DateTime.fromISO(task.dueDate)).days
+        const durationScore = daysSinceLastCompleted/totalDuration
+        const priorityScore = task.priority / 5
+        return durationScore * priorityScore
+    }
+
+    parseDuration = (schedule: TaskSchedule) => {
+        const durationConfig: {[key: string]: number} = {}
+        durationConfig[schedule.period] = schedule.interval
+        return Duration.fromObject(durationConfig)
+    }
+
+    createTask = async (request: CreateTaskRequest): Promise<CreateTaskResponse> => {
+        const taskId = randomUUID({})
+        const currentDate = DateTime.now().toISODate()
+
+        const taskDto = await this.taskClient.createTask({
+            parentId: `list#${request.listId}`,
+            childId: `task#${taskId}`,
             title: request.title,
-            owner: request.owner,
-            createdAt: currentDate
+            description: request.description,
+            priority: request.priority,
+            createdBy: request.createdBy,
+            createdAt: currentDate,
+            type: request.type,
+            schedule: request.schedule,
+            dueDate: request.startAt,
+            lastCompleted: DateTime.fromISO(request.startAt).minus(this.parseDuration(request.schedule)).toISODate()!
+        })
+
+        return {
+            title: taskDto.title,
+            description: taskDto.description,
+            priority: taskDto.priority,
+            createdBy: taskDto.createdBy,
+            createdAt: taskDto.createdAt,
+            type: taskDto.type,
+            schedule: taskDto.schedule,
+            dueDate: taskDto.dueDate,
+            lastCompleted: taskDto.lastCompleted,
+            score: this.calculateScore(taskDto)
         }
     }
 }

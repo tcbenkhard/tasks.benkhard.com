@@ -5,10 +5,12 @@ import {DocumentClient} from "aws-sdk/clients/dynamodb";
 import {TaskService} from "./service/task-service";
 import {parseBody} from "./util/validate";
 import {CreateListRequestSchema} from "./model/requests/create-list-request";
+import {TaskTableClient} from "./client/task-table-client";
 
 const documentClient = new DocumentClient()
 const authService = new AuthService(documentClient, 'RandomSigningKeyThatIsNotRealAtAll')
-const taskService = new TaskService(documentClient)
+const taskClient = new TaskTableClient(documentClient)
+const taskService = new TaskService(taskClient)
 
 export const handler = wrap_handler(async (event: APIGatewayProxyEvent, context: Context) => {
     const payload = authService.verifyAuthorizationHeader(event.headers['Authorization'])

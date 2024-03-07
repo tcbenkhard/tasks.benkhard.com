@@ -7,9 +7,8 @@ export class Score {
         const now = DateTime.now()
         const daysSinceLastCompleted = now.diff(lastCompl, 'days').toObject().days || 0
         const totalDuration = DateTime.fromISO(task.dueDate).diff(DateTime.fromISO(task.lastCompleted), 'days').toObject().days || 0
-        const durationScore = daysSinceLastCompleted / totalDuration
+        const durationScore = 2 * daysSinceLastCompleted / totalDuration
         const priorityScore = 1 + (task.priority / 5)
-        console.log(`Calculating score: ${durationScore} DS * ${priorityScore} PS`)
-        return durationScore * priorityScore
+        return Math.pow(durationScore, priorityScore)
     }
 }

@@ -89,7 +89,7 @@ export class TaskTableClient {
     }
 
     getListsFromMemberships = async (memberships: Array<Membership>): Promise<Array<ListDTO>> => {
-        const keys = memberships.map(membership => ({parentId: membership.listId, childId: membership.listId})) as KeyList
+        const keys = memberships.map(membership => ({parentId: `list#${membership.listId}`, childId: `list#${membership.listId}`})) as KeyList
         const requestItems: BatchGetRequestMap = {}
         requestItems[this.TASK_TABLE_NAME] = {
             Keys: keys

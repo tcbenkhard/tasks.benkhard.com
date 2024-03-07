@@ -5,10 +5,11 @@ import {GetListsRequest} from "../model/requests/get-lists-request";
 import {CreateTaskRequest} from "../model/requests/create-task-request";
 import {CreateTaskResponse} from "../model/response/create-task-response";
 import {DateTime, Duration} from 'luxon'
-import {TaskDTO, TaskSchedule} from "../model/dto/task";
+import {TaskSchedule} from "../model/dto/task";
 import {TaskTableClient} from "../client/task-table-client";
 import {ListNotFoundError, UnauthorizedError} from "../util/exception";
 import {GetListRequest} from "../model/requests/get-list-request";
+import {fromTaskDTO} from "../model/response/task-response";
 
 export class TaskService {
     /**
@@ -36,10 +37,9 @@ export class TaskService {
         if(!membership) throw new UnauthorizedError()
     }
 
-    getListsForUser = async (request: GetListsRequest): Promise<Array<ListResponse>> =>  {
+    getListsForUser = async (request: GetListsRequest): Promise<Array<ListDTO>> =>  {
         const userMemberships = await this.taskClient.getMembershipsForUser(request.owner)
         const userLists = await this.taskClient.getListsFromMemberships(userMemberships)
-
         return userLists
     }
     createList = async (request: CreateListRequest): Promise<ListResponse> => {
@@ -60,27 +60,26 @@ export class TaskService {
             id: listDto.id,
             title: listDto.title,
             owner: listDto.owner,
-            createdAt: listDto.createdAt
+            createdAt: listDto.createdAt,
+            tasks: []
         }
     }
 
-    getList = async (request: GetListRequest): Promise<ListDTO> => {
+    getList = async (request: GetListRequest): Promise<ListResponse> => {
         await this.assertUserIsMember(request.userId, request.listId)
 
         const list = await this.taskClient.getList(request.listId)
         if(list === null) throw new ListNotFoundError(request.listId)
-        return list
-    }
 
-    public calculateScore = (task: TaskDTO) => {
-        const lastCompl = DateTime.fromISO(task.lastCompleted)
-        const now = DateTime.now()
-        const daysSinceLastCompleted = now.diff(lastCompl, 'days').toObject().days || 0
-        const totalDuration = DateTime.fromISO(task.dueDate).diff(DateTime.fromISO(task.lastCompleted), 'days').toObject().days || 0
-        const durationScore = daysSinceLastCompleted / totalDuration
-        const priorityScore = task.priority / 5
-        console.log(`Calculating score: ${durationScore} DS * ${priorityScore} PS`)
-        return durationScore * priorityScore
+        const tasks = await this.taskClient.getTasksForList(list.id)
+
+        return {
+            id: list.id,
+            title: list.title,
+            owner: list.owner,
+            createdAt: list.createdAt,
+            tasks: tasks.map(fromTaskDTO)
+        }
     }
 
     private parseDuration = (schedule: TaskSchedule) => {
@@ -103,21 +102,10 @@ export class TaskService {
             createdAt: currentDate,
             type: request.type,
             schedule: request.schedule,
-            dueDate: request.startAt,
-            lastCompleted: DateTime.fromISO(request.startAt).minus(this.parseDuration(request.schedule)).toISODate()!
+            dueDate: request.startAt.toISOString(),
+            lastCompleted: DateTime.fromISO(request.startAt.toISOString()).minus(this.parseDuration(request.schedule)).toISODate()!
         })
 
-        return {
-            title: taskDto.title,
-            description: taskDto.description,
-            priority: taskDto.priority,
-            createdBy: taskDto.createdBy,
-            createdAt: taskDto.createdAt,
-            type: taskDto.type,
-            schedule: taskDto.schedule,
-            dueDate: taskDto.dueDate,
-            lastCompleted: taskDto.lastCompleted,
-            score: this.calculateScore(taskDto)
-        }
+        return fromTaskDTO(taskDto)
     }
 }

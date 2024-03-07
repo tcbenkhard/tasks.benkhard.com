@@ -140,6 +140,24 @@ export class TaskTableClient {
         }
     }
 
+    getTasksForList = async (listId: string): Promise<Array<TaskDTO>> => {
+        const result = await this.dynamo.query({
+            TableName: this.TASK_TABLE_NAME,
+            KeyConditionExpression: '#parentId = :listId and begins_with(#childId, :taskPrefix)',
+            ExpressionAttributeValues: {
+                ":listId": `list#${listId}`,
+                ":taskPrefix": "task#"
+            },
+            ExpressionAttributeNames: {
+                "#parentId": "parentId",
+                "#childId": "childId"
+            }
+        }).promise()
+
+        if(!result.Items) return []
+        return result.Items as Array<TaskDTO>
+    }
+
     createUserMembership = async (userId: string, listId: string) => {
         const createdAt = DateTime.now()
         await this.dynamo.put({

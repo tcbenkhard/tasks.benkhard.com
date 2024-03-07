@@ -72,6 +72,15 @@ export class TasksBenkhardComStack extends cdk.Stack {
     })
     taskTable.grantReadData(getListsHandler)
 
+    const getListHandler = new NodejsFunction(this, 'GetListHandler', {
+      handler: 'handler',
+      entry: 'src/get-list-handler.ts',
+      functionName: `${this.serviceName}-get-list`,
+      environment,
+      memorySize: 512
+    })
+    taskTable.grantReadData(getListHandler)
+
     const createTaskHandler = new NodejsFunction(this, 'CreateTaskHandler', {
       handler: 'handler',
       entry: 'src/create-task-handler.ts',
@@ -103,6 +112,7 @@ export class TasksBenkhardComStack extends cdk.Stack {
     listsResource.addMethod('GET', new LambdaIntegration(getListsHandler))
 
     const listResource = listsResource.addResource('{listId}')
+    listResource.addMethod('GET', new LambdaIntegration(getListHandler))
 
     const tasksResource = listResource.addResource('tasks')
     tasksResource.addMethod('POST', new LambdaIntegration(createTaskHandler))

@@ -39,13 +39,18 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5ODIwMTY2LCJleHAiOjE3MDk5MDY1NjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.Jz4mrlpr7dwURKWlHq6inwjUBayCn2z4Nt-VpRheQhg
 
 {
-  "title": "My fourth Task",
-  "description": "This is my very fourth task",
+  "title": "My Fifth Task",
+  "description": "This is my very fifth task",
   "priority": 4,
   "type": "flexible",
   "schedule": {
-    "interval": 2,
+    "interval": 1,
     "period": "weeks"
   },
-  "startAt": "2024-03-07"
+  "startAt": "2024-02-23"
 }
+
+### Get list
+GET https://{{baseUrl}}/prod/lists/1371cc81-82cb-44b9-a198-e533a6b61a0e
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5ODIwMTY2LCJleHAiOjE3MDk5MDY1NjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.Jz4mrlpr7dwURKWlHq6inwjUBayCn2z4Nt-VpRheQhg

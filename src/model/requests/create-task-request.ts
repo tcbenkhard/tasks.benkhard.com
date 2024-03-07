@@ -36,7 +36,7 @@ export const CreateTaskRequestSchema = z.object({
         interval: z.number().min(1),
         period: z.enum(['days', 'weeks', 'months', 'years']),
     }),
-    startAt: z.date()
+    startAt: z.coerce.date()
 })
 
 export type CreateTaskRequest = z.infer<typeof CreateTaskRequestSchema>

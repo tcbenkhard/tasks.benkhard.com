@@ -26,8 +26,8 @@ export class TaskTableClient {
         }).promise()
         if(!membershipsResponse.Items) return []
         return membershipsResponse.Items.map(res => ({
-            userId: res.parentId,
-            listId: res.childId,
+            userId: res.parentId.substring('user#'.length),
+            listId: res.childId.substring('list#'.length),
             createdAt: res.createdAt
         }))
     }
@@ -47,8 +47,8 @@ export class TaskTableClient {
         }).promise()
         if(!membershipsResponse.Items) return []
         return membershipsResponse.Items.map(res => ({
-            userId: res.childId,
-            listId: res.parentId,
+            userId: res.childId.substring('list#'.length),
+            listId: res.parentId.substring('user#'.length),
             createdAt: res.createdAt
         }))
     }
@@ -63,8 +63,8 @@ export class TaskTableClient {
         }).promise()
         if(!membershipsResponse.Item) return null
         return {
-            userId: membershipsResponse.Item.parentId,
-            listId: membershipsResponse.Item.childId,
+            userId: membershipsResponse.Item.parentId.substring('user#'.length),
+            listId: membershipsResponse.Item.childId.substring('list#'.length),
             createdAt: membershipsResponse.Item.createdAt
         }
     }
@@ -79,6 +79,12 @@ export class TaskTableClient {
         }).promise()
 
         if(!listResult.Item) return null
+        return {
+            id: listResult.Item.parentId.substring('list#'.length),
+            title: listResult.Item.title,
+            owner: listResult.Item.owner,
+            createdAt: listResult.Item.createdAt
+        }
         return listResult.Item as ListDTO
     }
 
@@ -94,7 +100,7 @@ export class TaskTableClient {
 
         if(!allLists.Responses) return []
         return allLists.Responses[this.TASK_TABLE_NAME].map(list => ({
-            id: list.parentId,
+            id: list.parentId.substring('list#'.length),
             title: list.title,
             owner: list.owner,
             createdAt: list.createdAt

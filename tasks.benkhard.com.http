@@ -21,7 +21,7 @@ Authorization: Basic tcbenkhard@gmail.com DitIsFout
 ### Maak een lijst
 POST https://{{baseUrl}}/prod/lists
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5NjQ2NjI2LCJleHAiOjE3MDk3MzMwMjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.ugEvhXD_S2SWbj0ReHLG1-o6rNRyvLldcwW-Xe9mgBs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5ODIwMTY2LCJleHAiOjE3MDk5MDY1NjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.Jz4mrlpr7dwURKWlHq6inwjUBayCn2z4Nt-VpRheQhg
 
 {
   "title": "Test lijst"
@@ -30,4 +30,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzI
 ### Get my lists
 GET https://{{baseUrl}}/prod/lists
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5NjQ2NjI2LCJleHAiOjE3MDk3MzMwMjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.ugEvhXD_S2SWbj0ReHLG1-o6rNRyvLldcwW-Xe9mgBs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5ODIwMTY2LCJleHAiOjE3MDk5MDY1NjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.Jz4mrlpr7dwURKWlHq6inwjUBayCn2z4Nt-VpRheQhg
+
+
+### Create a task in a list
+POST https://{{baseUrl}}/prod/lists/

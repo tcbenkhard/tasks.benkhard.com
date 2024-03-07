@@ -63,7 +63,7 @@ export class TasksBenkhardComStack extends cdk.Stack {
     })
     taskTable.grantReadWriteData(createListHandler)
 
-    const getListsHandler = new NodejsFunction(this, 'GetListsHandler', {
+    const getListsHandler = new NodejsFunction(this, 'GetListsHander', {
       handler: 'handler',
       entry: 'src/get-lists-handler.ts',
       functionName: `${this.serviceName}-get-lists`,

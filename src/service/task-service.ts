@@ -72,15 +72,16 @@ export class TaskService {
         return list
     }
 
-    calculateScore = (task: TaskDTO) => {
+    private calculateScore = (task: TaskDTO) => {
         const daysSinceLastCompleted = DateTime.now().diff(DateTime.fromISO(task.lastCompleted)).days
         const totalDuration = DateTime.fromISO(task.lastCompleted).diff(DateTime.fromISO(task.dueDate)).days
         const durationScore = daysSinceLastCompleted/totalDuration
         const priorityScore = task.priority / 5
+        console.log(`Calculating score: ${durationScore} DS * ${priorityScore} PS`)
         return durationScore * priorityScore
     }
 
-    parseDuration = (schedule: TaskSchedule) => {
+    private parseDuration = (schedule: TaskSchedule) => {
         const durationConfig: {[key: string]: number} = {}
         durationConfig[schedule.period] = schedule.interval
         return Duration.fromObject(durationConfig)

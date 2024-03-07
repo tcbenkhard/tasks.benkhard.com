@@ -42,7 +42,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzI
   "title": "My First Task",
   "description": "This is my very first task",
   "priority": 4,
-  "type": "FLEXIBLE",
+  "type": "flexible",
   "schedule": {
     "interval": 2,
     "period": "weeks"

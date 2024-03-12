@@ -9,6 +9,6 @@ export class Score {
         const totalDuration = DateTime.fromISO(task.dueDate).diff(DateTime.fromISO(task.lastCompleted), 'days').toObject().days || 0
         const durationScore = 2 * daysSinceLastCompleted / totalDuration
         const priorityScore = 1 + (task.priority / 5)
-        return Math.pow(durationScore, priorityScore)
+        return durationScore * priorityScore
     }
 }

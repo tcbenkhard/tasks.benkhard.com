@@ -21,7 +21,7 @@ Authorization: Basic tcbenkhard@gmail.com DitIsFout
 ### Maak een lijst
 POST https://{{baseUrl}}/prod/lists
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5ODIwMTY2LCJleHAiOjE3MDk5MDY1NjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.Jz4mrlpr7dwURKWlHq6inwjUBayCn2z4Nt-VpRheQhg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzEwMjMwMzY3LCJleHAiOjE3MTAzMTY3NjcsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.vXz_m102wOYqdBpX_tJsXr68OVhusHkMgd9rIz1iHu8
 
 {
   "title": "Test lijst"
@@ -30,13 +30,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzI
 ### Get my lists
 GET https://{{baseUrl}}/prod/lists
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5ODIwMTY2LCJleHAiOjE3MDk5MDY1NjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.Jz4mrlpr7dwURKWlHq6inwjUBayCn2z4Nt-VpRheQhg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzEwMjMwMzY3LCJleHAiOjE3MTAzMTY3NjcsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.vXz_m102wOYqdBpX_tJsXr68OVhusHkMgd9rIz1iHu8
 
 
 ### Create a task in a list
 POST https://{{baseUrl}}/prod/lists/1371cc81-82cb-44b9-a198-e533a6b61a0e/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5ODIwMTY2LCJleHAiOjE3MDk5MDY1NjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.Jz4mrlpr7dwURKWlHq6inwjUBayCn2z4Nt-VpRheQhg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzEwMjMwMzY3LCJleHAiOjE3MTAzMTY3NjcsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.vXz_m102wOYqdBpX_tJsXr68OVhusHkMgd9rIz1iHu8
 
 {
   "title": "My Sixth Task",
@@ -53,4 +53,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzI
 ### Get list
 GET https://{{baseUrl}}/prod/lists/1371cc81-82cb-44b9-a198-e533a6b61a0e
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzA5ODIwMTY2LCJleHAiOjE3MDk5MDY1NjYsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.Jz4mrlpr7dwURKWlHq6inwjUBayCn2z4Nt-VpRheQhg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzEwMjMwMzY3LCJleHAiOjE3MTAzMTY3NjcsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.vXz_m102wOYqdBpX_tJsXr68OVhusHkMgd9rIz1iHu8

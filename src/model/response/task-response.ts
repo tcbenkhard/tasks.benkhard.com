@@ -18,7 +18,7 @@ export interface TaskResponse {
 
 export const fromTaskDTO = (task: TaskDTO): TaskResponse => {
     return {
-        id: task.childId,
+        id: task.childId.substring('task#'.length),
         title: task.title,
         description: task.description,
         priority: task.priority,

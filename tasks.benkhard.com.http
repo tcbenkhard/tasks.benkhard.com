@@ -54,3 +54,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzI
 GET https://{{baseUrl}}/prod/lists/1371cc81-82cb-44b9-a198-e533a6b61a0e
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzEwMjMwMzY3LCJleHAiOjE3MTAzMTY3NjcsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.vXz_m102wOYqdBpX_tJsXr68OVhusHkMgd9rIz1iHu8
+
+
+### Complete task
+POST https://{{baseUrl}}/prod/lists/1371cc81-82cb-44b9-a198-e533a6b61a0e/tasks/0d00e43f-4b39-4452-b83a-01d0ce788ad5/complete
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzEwMjMwMzY3LCJleHAiOjE3MTAzMTY3NjcsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.vXz_m102wOYqdBpX_tJsXr68OVhusHkMgd9rIz1iHu8
+
+{}

@@ -90,6 +90,15 @@ export class TasksBenkhardComStack extends cdk.Stack {
     })
     taskTable.grantReadWriteData(createTaskHandler)
 
+    const completeTaskHandler = new NodejsFunction(this, 'CompleteTaskHandler', {
+      handler: 'handler',
+      entry: 'src/complete-task-handler.ts',
+      functionName: `${this.serviceName}-complete-task`,
+      environment,
+      memorySize: 512
+    })
+    taskTable.grantReadWriteData(completeTaskHandler)
+
     const gateway = new aws_apigateway.RestApi(this, `TasksApi`, {
       restApiName: this.serviceName,
       defaultCorsPreflightOptions: {
@@ -116,6 +125,10 @@ export class TasksBenkhardComStack extends cdk.Stack {
 
     const tasksResource = listResource.addResource('tasks')
     tasksResource.addMethod('POST', new LambdaIntegration(createTaskHandler))
-    
+
+    const taskResource = tasksResource.addResource('{taskId}')
+
+    const completeResource = taskResource.addResource('complete')
+    completeResource.addMethod('POST', new LambdaIntegration(completeTaskHandler))
   }
 }

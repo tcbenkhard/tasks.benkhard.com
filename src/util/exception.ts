@@ -3,7 +3,8 @@ export enum ErrorCode {
     USER_ALREADY_EXISTS,
     INVALID_CREDENTIALS,
     LIST_NOT_FOUND,
-UNAUTHORIZED
+    TASK_NOT_FOUND,
+    UNAUTHORIZED
 }
 
 export class ApiError extends Error {

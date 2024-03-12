@@ -10,6 +10,8 @@ import {TaskTableClient} from "../client/task-table-client";
 import {ListNotFoundError, UnauthorizedError} from "../util/exception";
 import {GetListRequest} from "../model/requests/get-list-request";
 import {fromTaskDTO} from "../model/response/task-response";
+import {CompleteTaskRequest} from "../model/requests/complete-task-request";
+import {TaskType} from "../model/domain/task-type";
 
 export class TaskService {
     /**
@@ -107,5 +109,18 @@ export class TaskService {
         })
 
         return fromTaskDTO(taskDto)
+    }
+
+    completeTask = async (request: CompleteTaskRequest): Promise<void> => {
+        await this.assertUserIsMember(request.userId, request.listId)
+
+        const taskDTO = await this.taskClient.getTask(request.listId, request.taskId)
+        // Set new due date
+        if(taskDTO.type == TaskType.FLEXIBLE) {
+            const durationObj: {[key: string]: number} = {}
+            durationObj[taskDTO.schedule.period] = taskDTO.schedule.interval
+            taskDTO.dueDate = DateTime.now().plus(Duration.fromObject(durationObj)).toFormat('yyyy-MM-dd')
+        }
+        await this.taskClient.saveTask(taskDTO)
     }
 }

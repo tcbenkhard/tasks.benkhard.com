@@ -3,6 +3,7 @@ import {get_variable} from "../util/env";
 import {Membership} from "../model/dto/membership";
 import {DateTime} from "luxon";
 import {TaskDTO} from "../model/dto/task";
+import {ErrorCode, NotFoundError} from "../util/exception";
 
 export class TaskTableClient {
     private dynamo: DocumentClient
@@ -184,5 +185,27 @@ export class TaskTableClient {
         }).promise()
 
         return taskDto
+    }
+
+    saveTask = async(taskDto: TaskDTO) => {
+        await this.dynamo.put({
+            TableName: this.TASK_TABLE_NAME,
+            Item: taskDto
+        }).promise()
+    }
+
+    getTask = async (listId: string, taskId: string): Promise<TaskDTO> => {
+        const result = await this.dynamo.get({
+            TableName: this.TASK_TABLE_NAME,
+            Key: {
+                parentId: `list#${listId}`,
+                childId: `task#${taskId}`
+            }
+        }).promise()
+
+        if(!result.Item) {
+            throw new NotFoundError(`Task with id ${taskId} was not found`, ErrorCode.TASK_NOT_FOUND)
+        }
+        return result.Item as TaskDTO
     }
 }

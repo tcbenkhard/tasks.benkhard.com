@@ -4,6 +4,7 @@ import {Score} from "../../util/score";
 
 export interface TaskResponse {
     id: string
+    listId: string
     title: string
     description?: string
     priority: number
@@ -19,6 +20,7 @@ export interface TaskResponse {
 export const fromTaskDTO = (task: TaskDTO): TaskResponse => {
     return {
         id: task.childId.substring('task#'.length),
+        listId: task.parentId.substring('list#'.length),
         title: task.title,
         description: task.description,
         priority: task.priority,

@@ -22,4 +22,4 @@ export const handler = wrap_handler(async (event: APIGatewayProxyEvent, context:
     })
 
     return taskService.completeTask(request)
-}, 200)
+}, 204)

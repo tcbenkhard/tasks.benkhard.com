@@ -35,7 +35,7 @@ export const CreateTaskRequestSchema = z.object({
     schedule: z.object({
         interval: z.number().min(1),
         period: z.enum(['days', 'weeks', 'months', 'years']),
-    }),
+    }).optional(),
     startAt: z.coerce.date()
 })
 

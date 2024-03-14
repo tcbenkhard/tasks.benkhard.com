@@ -3,15 +3,26 @@ POST https://{{baseUrl}}/prod/register
 Content-Type: application/json
 
 {
-    "email": "tcbenkhard@gmail.com",
-    "password": "DitIsEenTest",
-    "name": "Timo Benkhard"
+    "email": "tim@tomin-groep.nl",
+    "password": "wannemongol",
+    "name": "Tim Martens"
 }
 
 ### Login request
 POST https://{{baseUrl}}/prod/login
 Content-Type: application/json
 Authorization: Basic tcbenkhard@gmail.com DitIsEenTest
+
+> {%
+    client.global.set("accessToken", response.body.accessToken);
+%}
+
+### Login request
+POST https://{{baseUrl}}/prod/login
+Content-Type: application/json
+Authorization: Basic tim@tomin-groep.nl wannemongol
+
+> {% client.global.set("accessToken", response.body.accessToken); %}
 
 ### Invalid Login request
 POST https://{{baseUrl}}/prod/login
@@ -21,44 +32,44 @@ Authorization: Basic tcbenkhard@gmail.com DitIsFout
 ### Maak een lijst
 POST https://{{baseUrl}}/prod/lists
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzEwMjMwMzY3LCJleHAiOjE3MTAzMTY3NjcsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.vXz_m102wOYqdBpX_tJsXr68OVhusHkMgd9rIz1iHu8
+Authorization: Bearer {{accessToken}}
 
 {
-  "title": "Test lijst"
+  "title": "Klusjes voor op werk"
 }
 
 ### Get my lists
 GET https://{{baseUrl}}/prod/lists
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzEwMjMwMzY3LCJleHAiOjE3MTAzMTY3NjcsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.vXz_m102wOYqdBpX_tJsXr68OVhusHkMgd9rIz1iHu8
+Authorization: Bearer {{accessToken}}
 
 
 ### Create a task in a list
-POST https://{{baseUrl}}/prod/lists/1371cc81-82cb-44b9-a198-e533a6b61a0e/tasks
+POST https://{{baseUrl}}/prod/lists/b0c3e46a-7a99-4201-ad35-161b952f6a87/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzEwMjMwMzY3LCJleHAiOjE3MTAzMTY3NjcsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.vXz_m102wOYqdBpX_tJsXr68OVhusHkMgd9rIz1iHu8
+Authorization: Bearer {{accessToken}}
 
 {
-  "title": "My Sixth Task",
-  "description": "This is my very sixth task",
+  "title": "Dozen vouwen",
+  "description": "Man, man zo moeilijk dit werk",
   "priority": 1,
   "type": "flexible",
   "schedule": {
     "interval": 1,
     "period": "weeks"
   },
-  "startAt": "2024-02-23"
+  "startAt": "2024-03-12"
 }
 
 ### Get list
 GET https://{{baseUrl}}/prod/lists/1371cc81-82cb-44b9-a198-e533a6b61a0e
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzEwMjMwMzY3LCJleHAiOjE3MTAzMTY3NjcsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.vXz_m102wOYqdBpX_tJsXr68OVhusHkMgd9rIz1iHu8
+Authorization: Bearer {{accessToken}}
 
 
 ### Complete task
 POST https://{{baseUrl}}/prod/lists/1371cc81-82cb-44b9-a198-e533a6b61a0e/tasks/0d00e43f-4b39-4452-b83a-01d0ce788ad5/complete
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzEwMjMwMzY3LCJleHAiOjE3MTAzMTY3NjcsInN1YiI6InRjYmVua2hhcmRAZ21haWwuY29tIn0.vXz_m102wOYqdBpX_tJsXr68OVhusHkMgd9rIz1iHu8
+Authorization: Bearer {{accessToken}}
 
 {}
